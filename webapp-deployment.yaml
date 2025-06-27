@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+  namespace: webapp
+  labels:
+    app: employees
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: employees
+  template:
+    metadata:
+      labels:
+        app: employees
+    spec:
+      containers:
+      - name: webapp
+        image: 123456789012.dkr.ecr.us-east-1.amazonaws.com/webapp-assignment:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_HOST
+          value: "mysql-service.mysql.svc.cluster.local"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_NAME
+          value: "employees"
+        - name: DB_USER
+          value: "dbuser"
+        - name: DB_PASSWORD
+          value: "dbpassword"
+      imagePullSecrets:
+      - name: ecr-secret
